@@ -3,17 +3,18 @@ import { ref } from 'vue'
 import { auth } from '@/firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useHead } from '@unhead/vue'
-import { useRouter } from 'vue-router'
-const router = useRouter();
+
 useHead({
   title: 'Login Page',
   meta: [
     { name: 'description', content: 'Login to your account.' }
   ]
 });
+
 const email = ref('');
 const password = ref('');
 const loginError = ref('');
+const loginSuccess = ref(false);
 
 async function login() {
   if (!email.value || !password.value) {
@@ -22,6 +23,7 @@ async function login() {
   }
   try {
     await signInWithEmailAndPassword(auth, email.value, password.value);
+    loginSuccess.value = true;
   } catch (error) {
     console.error('Error signing in:', error);
     switch (error.code) {
@@ -67,6 +69,7 @@ async function login() {
       @click="login">Log&nbsp;in</button>
 
     <div v-if="loginError" class="text-red-600">{{ loginError }}</div>
+    <div v-if="loginSuccess" class="text-green-600">Login successful! You can go to account again.</div>
   </form>
   <p class="text-center text-gray-600 mt-4">
     Don't have an account? <a href="/register" class="text-blue-600 hover:underline">Register</a>

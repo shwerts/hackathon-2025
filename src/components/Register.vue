@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { db, auth } from '@/firebase'
 import { setDoc, doc, serverTimestamp } from 'firebase/firestore'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { useHead } from '@unhead/vue'
 
 useHead({
@@ -24,10 +24,22 @@ async function register() {
     return;
   }
   try {
-    await createUserWithEmailAndPassword(auth, email.value, password.value);
+    const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value);
     console.log('User registered successfully');
 
-    await setDoc(doc(db, "users", auth.currentUser.uid), {
+    updateProfile(userCredential.user, {
+      displayName: name.value
+    })
+    .then(() => {
+      console.log('Profile updated successfully');
+      registrationSuccess.value = true;
+    })
+    .catch((error) => {
+      console.error('Error updating profile:', error);
+      registrationError.value = 'Failed to update profile.';
+    });
+
+    await setDoc(doc(db, "users", userCredential.user.uid), {
       createdAt: serverTimestamp(),
       displayName: name.value
     });
@@ -77,7 +89,7 @@ async function register() {
       class="bg-gray-300 w-min p-2 rounded-md font-bold"
       @click="register">Register</button>
 
-    <div v-if="registrationSuccess" class="text-green-600">Registration successful! You can now log in.</div>
+    <div v-if="registrationSuccess" class="text-green-600">Registration successful!</div>
 
     <div v-if="registrationError" class="text-red-600">{{ registrationError }}</div>
   </form>
