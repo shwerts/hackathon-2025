@@ -1,3 +1,40 @@
+<script setup>
+import { useRouter } from 'vue-router';
+const router = useRouter();
+import { auth } from '@/firebase';
+import { signOut } from 'firebase/auth';
+
+defineProps({
+  userName: {
+    type: String,
+    default: 'NO NAME'
+  }
+});
+
+const logout = async () => {
+  try {
+    await signOut(auth);
+    router.push('/'); // Redirect to home after logout
+  } catch (error) {
+    console.error('Logout failed:', error);
+  }
+};
+
+// function changeName() {
+//   // Placeholder for name change logic
+//   console.log('Change name function called');
+
+//   updateProfile(auth.currentUser, {
+//     displayName: newName.value
+//   }).then(() => {
+//     console.log('Name updated successfully');
+//   }).catch((error) => {
+//     console.error('Error updating name:', error);
+//   });
+// }
+// const newName = ref('');
+</script>
+
 <template>
   <div class="grid grid-cols-4 gap-8">
     <!-- Sidebar -->
@@ -19,6 +56,9 @@
         </span>
         <a href="#" class="text-blue-700 underline">[Activate Premium]</a>
       </div>
+      <button
+        @click="logout"
+        class="bg-red-100 rounded-lg p-4">Logout</button>
     </aside>
     <!-- Main Profile -->
     <section class="col-span-3 flex flex-col items-center gap-6">
@@ -29,21 +69,19 @@
           DOWNLOAD
         </button>
       </div>
-      <p class="text-gray-600 text-xl">Здравствуйте, <span id="user-name" class="font-semibold">Имя Фамилия</span></p>
-      <form class="w-full max-w-lg flex flex-col gap-4">
+      <p class="text-gray-600 text-xl">Welcome, <span id="user-name" class="font-semibold">{{ userName }}</span></p>
+      <form
+        class="w-full max-w-lg flex flex-col gap-4"
+        @submit.prevent>
         <div class="flex items-center gap-2 bg-gray-300 rounded px-4 py-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"></path></svg>
-          <input type="text" placeholder="User" class="bg-transparent w-full outline-none">
+          <input type="text" placeholder="Your new name" required
+            class="bg-transparent w-full outline-none">
         </div>
-        <div class="flex items-center gap-2 bg-gray-300 rounded px-4 py-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"></path></svg>
-          <input type="text" placeholder="Name & Surname" class="bg-transparent w-full outline-none">
-        </div>
-        <div class="flex items-center gap-2 bg-gray-300 rounded px-4 py-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"></path></svg>
-          <input type="text" placeholder="Subject" class="bg-transparent w-full outline-none">
-        </div>
-        <button class="bg-blue-300 text-white font-semibold rounded px-6 py-2 mt-4 self-end">EDIT</button>
+        <button
+          class="bg-blue-400 text-white font-semibold rounded px-6 py-2 mt-4 self-end"
+          type="submit"
+          @click="changeName">EDIT</button>
       </form>
     </section>
   </div>
