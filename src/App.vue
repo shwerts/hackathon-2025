@@ -11,7 +11,7 @@ import { RouterLink, RouterView } from 'vue-router'
       </div>
       <nav class="flex gap-6 font-medium text-gray-700">
         <RouterLink to="/" class="hover:text-blue-600 transition">Main page</RouterLink>
-        <!-- <RouterLink to="/surveys" class="hover:text-blue-600 transition">Опросы</RouterLink> -->
+        <RouterLink to="/surveys" class="hover:text-blue-600 transition">Surveys</RouterLink>
         <RouterLink to="/account" class="hover:text-blue-600 transition">Account</RouterLink>
       </nav>
     </div>

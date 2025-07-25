@@ -20,19 +20,23 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../components/Login.vue'),
     },
     {
       path: '/register',
       name: 'register',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../components/Register.vue'),
     },
+    {
+      path: '/surveys',
+      name: 'surveys',
+      component: () => import('../components/Surveys.vue'),
+    },
+    {
+      path: '/create-survey',
+      name: 'createSurvey',
+      component: () => import('../components/CreateSurvey.vue')
+    }
   ],
 })
 
