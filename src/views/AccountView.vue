@@ -19,13 +19,7 @@ useHead({
 });
 const user = ref(null);
 
-onAuthStateChanged(auth, async (currentUser) => {
-  if (currentUser) {
-    user.value = currentUser;
-  } else {
-    user.value = null;
-  }
-});
+user.value = auth.currentUser;
 
 function loadingBar() {
   // Placeholder for loading bar logic
