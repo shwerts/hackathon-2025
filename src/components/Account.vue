@@ -39,6 +39,7 @@ async function changeName() {
     console.error('Error updating name:', error);
   });
   await auth.currentUser.reload();
+  nameUpdated.value = true;
 
   await setDoc(doc(db, 'users', auth.currentUser.uid), {
     displayName: newName.value
@@ -49,6 +50,7 @@ async function changeName() {
   });
 }
 const newName = ref('');
+const nameUpdated = ref(false);
 </script>
 
 <template>
@@ -99,6 +101,7 @@ const newName = ref('');
           type="submit"
           @click="changeName">EDIT</button>
       </form>
+      <p class="text-green-500 text-sm" v-if="nameUpdated">Your name has been updated successfully!</p>
     </section>
   </div>
 </template>
