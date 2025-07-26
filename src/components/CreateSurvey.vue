@@ -5,13 +5,14 @@ import { onMounted, ref } from 'vue';
 import router from '@/router';
 import { doc, addDoc, collection, getDoc } from 'firebase/firestore';
 
-const user = ref(auth.currentUser);
-if (!user.value) {
+const userCred = ref(auth.currentUser);
+const user = ref(null);
+if (!userCred.value) {
   router.push('/login');
 }
 
 onMounted(async () => {
-  const docRef = doc(db, "users", user.value.uid);
+  const docRef = doc(db, "users", userCred.value.uid);
   const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
     user.value = docSnap.data();
@@ -22,7 +23,7 @@ onMounted(async () => {
 
 const title = ref('');
 async function createSurvey() {
-  if (!user) {
+  if (!userCred.value) {
     console.error('User not authenticated');
     return;
   }
@@ -33,7 +34,7 @@ async function createSurvey() {
   try {
     const surveyRef = await addDoc(collection(db, 'surveys'), {
       createdAt: new Date(),
-      createdBy: user.uid,
+      createdBy: userCred.value.uid,
       title: title.value,
       responsesCount: 0,
     });
