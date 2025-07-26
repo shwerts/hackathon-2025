@@ -21,20 +21,16 @@ onMounted(async () => {
   }
 });
 
+const form = document.querySelector('form');
 const title = ref('');
 const questions = ref([]);
 const question = ref('');
 const submitError = ref('');
-// Create the question in Firestore
-// const questionRef = await addDoc(collection(db, 'questions'), {
-//   createdBy: userCred.value.uid,
-//   questionText: question,
-//   surveyId: '', // This will be set when the survey is created
-// });
+const surveyCreated = ref(false);
 
 async function createQuestion() {
   try {
-    // There's an array here for questions, so we can add multiple questions
+    // There's an array here for questions
     if (question.value.trim() === '') {
       console.error('Question cannot be empty');
       submitError.value = 'Question cannot be empty';
@@ -78,6 +74,7 @@ async function submitSurvey() {
       questions: questions.value,
     });
     console.log('Survey created with ID:', surveyRef.id);
+    surveyCreated.value = true;
   } catch (error) {
     console.error('Error submitting survey:', error);
     submitError.value = 'Error submitting survey. Please try again.';
@@ -124,6 +121,10 @@ async function submitSurvey() {
         class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
         type="submit">Create Survey</button>
     </form>
+    <p v-if="surveyCreated" class="text-green-500">You created a survey!</p>
+    <div class="mt-4">
+      <RouterLink to="/surveys" class="text-blue-600 hover:underline">View All Surveys</RouterLink>
+    </div>
   </div>
   <div v-else>
     <p class="bg-red-500 text-white p-2 rounded">You do not have permission to create surveys.</p>
