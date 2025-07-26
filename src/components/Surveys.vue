@@ -36,7 +36,7 @@ onMounted(async () => {
     <RouterLink class="bg-blue-600 text-white px-4 py-2 rounded" to="/create-survey">Create New Survey</RouterLink>
   </div>
   <div class="mt-6">
-    <h2 class="text-xl font-semibold mb-2">Active Surveys</h2>
+    <h2 class="text-xl font-semibold mb-2">Your Surveys</h2>
     <ul class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <li class="mb-2 bg-white rounded-2xl p-6 shadow-md" v-for="survey in surveys" :key="survey.id">
         {{ survey.title }} - {{ survey.responsesCount }} Responses
