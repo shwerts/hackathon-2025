@@ -36,6 +36,11 @@ const router = createRouter({
       path: '/create-survey',
       name: 'createSurvey',
       component: () => import('../components/CreateSurvey.vue')
+    },
+    {
+      path: '/survey/:id',
+      name: 'theSurvey',
+      component: () => import('../views/SurveyView.vue')
     }
   ],
 })
