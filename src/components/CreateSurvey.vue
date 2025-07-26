@@ -1,14 +1,24 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import { db, auth } from '@/firebase';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import router from '@/router';
-import { addDoc, collection } from 'firebase/firestore';
+import { doc, addDoc, collection, getDoc } from 'firebase/firestore';
 
-const user = auth.currentUser;
-if (!user) {
+const user = ref(auth.currentUser);
+if (!user.value) {
   router.push('/login');
 }
+
+onMounted(async () => {
+  const docRef = doc(db, "users", user.value.uid);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    user.value = docSnap.data();
+  } else {
+    console.log("No such document!");
+  }
+});
 
 const title = ref('');
 async function createSurvey() {
@@ -36,7 +46,7 @@ async function createSurvey() {
 
 <template>
   <!-- Creating a new survey -->
-  <div>
+  <div v-if="user && user.role === 'personnel'" class="p-6">
     <h1 class="text-2xl font-bold mb-4">Create Survey</h1>
     <p class="mb-4">Use the form below to create a new survey.</p>
     <form
@@ -53,5 +63,8 @@ async function createSurvey() {
         class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
         type="submit">Create Survey</button>
     </form>
+  </div>
+  <div v-else>
+    <p class="bg-red-500 text-white p-2 rounded">You do not have permission to create surveys.</p>
   </div>
 </template>
