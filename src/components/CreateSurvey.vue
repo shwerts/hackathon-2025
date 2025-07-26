@@ -27,6 +27,7 @@ const questions = ref([]);
 const question = ref('');
 const submitError = ref('');
 const surveyCreated = ref(false);
+const surveyId = ref('');
 
 async function createQuestion() {
   try {
@@ -74,6 +75,7 @@ async function submitSurvey() {
       questions: questions.value,
     });
     console.log('Survey created with ID:', surveyRef.id);
+    surveyId.value = surveyRef.id;
     surveyCreated.value = true;
   } catch (error) {
     console.error('Error submitting survey:', error);
@@ -121,7 +123,7 @@ async function submitSurvey() {
         class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-200"
         type="submit">Create Survey</button>
     </form>
-    <p v-if="surveyCreated" class="text-green-500">You created a survey!</p>
+    <p v-if="surveyCreated" class="text-green-500">You created a survey! The survey ID is: {{ surveyId }}</p>
     <div class="mt-4">
       <RouterLink to="/surveys" class="text-blue-600 hover:underline">View All Surveys</RouterLink>
     </div>

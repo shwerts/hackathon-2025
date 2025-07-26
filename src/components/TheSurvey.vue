@@ -8,19 +8,31 @@ const props = defineProps({
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { auth, db } from '@/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDocFromServer, updateDoc } from 'firebase/firestore';
 
 const survey = ref(null);
 
 onMounted(async () => {
   const docRef = doc(db, 'surveys', props.id);
-  const docSnap = await getDoc(docRef);
+  const docSnap = await getDocFromServer(docRef);
   if (docSnap.exists()) {
     survey.value = docSnap.data();
   } else {
     console.log('No such document!');
   }
 });
+
+async function submitOpinion() {
+  const docRef = doc(db, 'surveys', props.id);
+  // Need to add survey's total opinions count
+  await updateDoc(docRef, {
+    responsesCount: survey.value.responsesCount + 1,
+    [`opinions.${auth.currentUser.uid}`]: {
+      opinion: document.querySelector(`#question_0`).value // Assuming single question for simplicity
+    }
+  });
+  alert('Thank you for your opinion!');
+}
 </script>
 
 <template>
@@ -37,6 +49,12 @@ onMounted(async () => {
           >Write something...</textarea>
       </li>
     </ul>
+    <button
+      class="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      @click="submitOpinion"
+    >
+      Submit Survey
+    </button>
   </div>
   <div v-else>
     <p>Loading survey...</p>
