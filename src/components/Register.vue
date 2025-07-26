@@ -41,7 +41,8 @@ async function register() {
 
     await setDoc(doc(db, "users", userCredential.user.uid), {
       createdAt: serverTimestamp(),
-      displayName: name.value
+      displayName: name.value,
+      role: 'personnel',
     });
   } catch (error) {
     switch (error.code) {
