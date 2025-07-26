@@ -1,8 +1,11 @@
 <script setup>
 import { useRouter } from 'vue-router';
 const router = useRouter();
-import { auth } from '@/firebase';
-import { signOut } from 'firebase/auth';
+import { auth, db } from '@/firebase';
+import { signOut, updateProfile } from 'firebase/auth';
+import { setDoc, doc } from 'firebase/firestore';
+import { ref } from 'vue';
+
 
 defineProps({
   userName: {
@@ -20,19 +23,32 @@ const logout = async () => {
   }
 };
 
-// function changeName() {
-//   // Placeholder for name change logic
-//   console.log('Change name function called');
+async function changeName() {
+  if (!newName.value.trim()) {
+    console.error('Name cannot be empty');
+    return;
+  }
+  // Placeholder for name change logic
+  console.log('Change name function called');
 
-//   updateProfile(auth.currentUser, {
-//     displayName: newName.value
-//   }).then(() => {
-//     console.log('Name updated successfully');
-//   }).catch((error) => {
-//     console.error('Error updating name:', error);
-//   });
-// }
-// const newName = ref('');
+  updateProfile(auth.currentUser, {
+    displayName: newName.value
+  }).then(() => {
+    console.log('Name updated successfully');
+  }).catch((error) => {
+    console.error('Error updating name:', error);
+  });
+  await auth.currentUser.reload();
+
+  await setDoc(doc(db, 'users', auth.currentUser.uid), {
+    displayName: newName.value
+  }, { merge: true }).then(() => {
+    console.log('User name updated in Firestore');
+  }).catch((error) => {
+    console.error('Error updating user name in Firestore:', error);
+  });
+}
+const newName = ref('');
 </script>
 
 <template>
@@ -75,7 +91,7 @@ const logout = async () => {
         @submit.prevent>
         <div class="flex items-center gap-2 bg-gray-300 rounded px-4 py-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"></path></svg>
-          <input type="text" placeholder="Your new name" required
+          <input type="text" placeholder="Your new name" required v-model="newName"
             class="bg-transparent w-full outline-none">
         </div>
         <button
