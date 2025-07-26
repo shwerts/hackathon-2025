@@ -54,7 +54,7 @@ const nameUpdated = ref(false);
 </script>
 
 <template>
-  <div class="grid grid-cols-4 gap-8">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
     <!-- Sidebar -->
     <aside class="col-span-1 flex flex-col gap-4">
       <div class="flex flex-col gap-2 bg-blue-100 rounded-lg p-4">
@@ -67,13 +67,6 @@ const nameUpdated = ref(false);
           Click to add a group
         </button>
       </div>
-      <!-- <div class="bg-blue-100 rounded-lg p-4">
-        <span class="flex items-center gap-2">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"></path><path d="M6.62 10.79A7.963 7.963 0 0 0 4 12c0 4.42 3.58 8 8 8s8-3.58 8-8c0-1.21-.27-2.36-.76-3.38"></path></svg>
-          Status Account: Free
-        </span>
-        <a href="#" class="text-blue-700 underline">[Activate Premium]</a>
-      </div> -->
       <button
         @click="logout"
         class="bg-red-100 rounded-lg p-4">Logout</button>
@@ -81,12 +74,6 @@ const nameUpdated = ref(false);
     <!-- Main Profile -->
     <section class="col-span-3 flex flex-col items-center gap-6">
       <img src="/src/assets/user_pic.png" alt="Avatar" class="rounded-full w-28 h-28 object-cover">
-      <!-- <div class="flex flex-col items-center">
-        <button class="bg-blue-200 text-blue-700 px-3 py-1 rounded flex items-center gap-1 text-sm">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 16v-4m0 0V8m0 4h4m-4 0H8"></path></svg>
-          DOWNLOAD
-        </button>
-      </div> -->
       <p class="text-gray-600 text-xl">Welcome, <span id="user-name" class="font-semibold">{{ userName }}</span></p>
       <form
         class="w-full max-w-lg flex flex-col gap-4"
