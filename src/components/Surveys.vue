@@ -2,7 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { db, auth } from '@/firebase';
 import { onMounted, ref } from 'vue';
-import { getDocs, collection, query, where } from 'firebase/firestore';
+import { collection, query, where, getDocsFromServer } from 'firebase/firestore';
 import router from '@/router';
 
 const user = auth.currentUser;
@@ -16,7 +16,7 @@ onMounted(async () => {
   if (user) {
     const surveysCollection = collection(db, 'surveys');
     const q = query(surveysCollection, where('createdBy', '==', user.uid));
-    const surveySnapshot = await getDocs(q);
+    const surveySnapshot = await getDocsFromServer(q);
     surveySnapshot.forEach(doc => {
       surveys.value.push({
         id: doc.id,

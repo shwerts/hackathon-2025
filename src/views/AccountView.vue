@@ -3,12 +3,18 @@ import Account from '../components/Account.vue'
 import Login from '../components/Login.vue';
 import Register from '@/components/Register.vue';
 
+import { onAuthStateChanged } from 'firebase/auth'
 import { useHead } from '@unhead/vue'
 import { db, auth } from '@/firebase';
 import { ref } from 'vue';
 
-import { doc, getDoc, getDocFromServer } from 'firebase/firestore'
-import { onAuthStateChanged } from 'firebase/auth'
+onAuthStateChanged(auth, (currentUser) => {
+  if (currentUser) {
+    user.value = currentUser;
+  } else {
+    console.log('No user is signed in.');
+  }
+});
 
 useHead({
   title: 'Account Page',
@@ -43,5 +49,5 @@ function loadingBar() {
 
 <template>
   <Account v-if="user" :userName="user.displayName"/>
-  <Register v-else />
+  <Login v-else />
 </template>
